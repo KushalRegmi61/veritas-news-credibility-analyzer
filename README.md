@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 # misinfo-detector
  Misinfo Detector — A Hybrid ML System for Detecting Fake News Articles using Text and Metadata
 =======
@@ -19,3 +20,5 @@ A FastAPI-based service for detecting misinformation in text using a machine lea
 1. Install requirements: `pip install -r requirements.txt`
 2. Run server: `uvicorn api.main:app --reload`
 >>>>>>> 7dc618c (initial commit)
+=======
+>>>>>>> 6b6cb4c (update readme.md file)
