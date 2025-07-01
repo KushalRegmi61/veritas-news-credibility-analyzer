@@ -24,13 +24,20 @@ The goal is to analyze and compare the linguistic and structural characteristics
 
 ## 1. Data Cleaning & Preparation
 
-**Before analysis, we ensured data quality by:**
-- Removing noisy/incomplete records (e.g., missing or malformed dates).
-- Dropping fully duplicated rows and resolving label conflicts for the same text.
-- Standardizing date formats and merging real and fake news datasets.
+**Steps taken to ensure data quality:**
+- Removed records with missing or invalid dates.
+- Dropped exact duplicates and resolved any label inconsistencies for identical articles.
+- Standardized date formats and combined the real and fake news datasets into a single dataframe.
+- Engineered additional metadata features:
+  - `text_length`: Number of characters in the article body.
+  - `title_length`: Number of characters in the headline.
+  - `num_exclamations`: Count of exclamation marks in the article.
+  - `num_questions`: Count of question marks in the article.
+  - `num_uppercase_words`: Number of fully uppercase words in the article.
+  - `day_of_week`: Day of the week derived from the publication date.
 
-*Outcome:*  
-A clean, deduplicated dataset ready for robust analysis and modeling.
+**Result:**  
+A clean, unified, and feature-rich dataset prepared for comprehensive exploratory analysis and modeling.
 
 ---
 
