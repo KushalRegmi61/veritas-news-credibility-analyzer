@@ -1,6 +1,21 @@
 # Pydantic schema for prediction response
-from pydantic import BaseModel
-
+from pydantic import BaseModel, Field
+from typing import Dict
 class PredictionResponse(BaseModel):
-    label: str
-    probability: float
+    predicted_category: str = Field(
+        ...,
+        description='The Predicted News Category', 
+        examples=['Fake News']
+    ) 
+    
+    confidence: float = Field(
+        ...,
+        description="Model's confidence score for the predicted class (range: 0 to 1)",
+        json_schema_extra={"examples": [0.8432]}
+    )
+
+    class_probabilities: Dict[str, float] = Field(
+        ...,
+        description="Probability distribution across all possible classes",
+        json_schema_extra={"examples": [{"Real News": 0.16, "Fake News": 0.84}]}
+    )
