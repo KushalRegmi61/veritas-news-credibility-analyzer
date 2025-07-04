@@ -4,3 +4,4 @@ __pycache__/
 .env
 *.ipynb_checkpoints/
 model/*.pkl
+__init__.py
