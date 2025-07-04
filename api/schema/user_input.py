@@ -36,8 +36,3 @@ class UserInput(BaseModel):
         return sum(1 for w in str(self.text).split() if w.isupper())
 
 
-
-model = UserInput(**{'text': "Kushal is my name? ! KUSH"})
-
-print(model.text, model.text_length, model.uppercase_words_count, model.exclamations_mark_count, model.questions_mark_count)
-
