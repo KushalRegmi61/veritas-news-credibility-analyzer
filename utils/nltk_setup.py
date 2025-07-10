@@ -1,6 +1,7 @@
 import os
 import nltk
-
+from dotenv import load_dotenv
+load_dotenv()
 
 # Define your project-specific nltk_data directory
 NLTK_DIR = os.getenv("NLTK_DATA", "./nltk_data")
@@ -20,6 +21,7 @@ REQUIRED_RESOURCES = {
 def ensure_nltk_resources():
     os.makedirs(NLTK_DIR, exist_ok=True)
 
+
     for resource, path in REQUIRED_RESOURCES.items():
         try:
             nltk.data.find(path)
@@ -28,6 +30,6 @@ def ensure_nltk_resources():
             print(f"[nltk] Downloading '{resource}'...")
             nltk.download(resource, download_dir=NLTK_DIR)
 
-
 if __name__ == "__main__":
     ensure_nltk_resources()
+    print(NLTK_DIR)
