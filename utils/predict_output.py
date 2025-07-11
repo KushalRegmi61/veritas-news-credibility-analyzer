@@ -2,7 +2,7 @@ import pandas as pd
 
 # from utils.nltk_setup import ensure_nltk_resources
 from api.schema.user_input import UserInput
-from utils.model_utils import load_preprocessor_and_model
+from utils.model_utils import load_model, load_preprocessor
 from dotenv import load_dotenv
 import os
 
@@ -18,7 +18,8 @@ model_pipeline_path = os.getenv('MODEL_PATH')
 MODEL_VERSION = '1.0.0'
 
 # Load model components
-model_pipeline, text_preprocessor = load_preprocessor_and_model(model_pipeline_path=model_pipeline_path)
+model_pipeline = load_model(model_pipeline_path=model_pipeline_path)
+text_preprocessor = load_preprocessor()
 
 # Mapping from numeric label to human-readable class name
 CLASS_LABELS = {
@@ -43,7 +44,8 @@ def predict_output(user_input):
     """
     # Convert input to DataFrame and preprocess text
     df = pd.DataFrame([user_input])
-    # df["text"] = text_preprocessor.transform(df["text"])
+    
+    df["text"] = text_preprocessor.fit_transform(df["text"])
 
     # Predict class and get probability distribution
     predicted_label = int(model_pipeline.predict(df)[0])
