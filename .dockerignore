@@ -1,9 +1,46 @@
+# Python bytecode
 __pycache__/
 *.pyc
-*.pkl
+*.pyo
+
+# Jupyter notebooks and checkpoints
 *.ipynb
-nltk_data/
+.ipynb_checkpoints/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+.env
+
+# Model and preprocessing artifacts
+best_parameters.pkl
+
+# Data and reports
 data/
 notebooks/
 reports/
+
+# NLTK data (downloaded inside Docker)
+nltk_data/
+.nltk_data/
+
+# Logs and temporary files
+logs/
+*.md
+
+# csv files
+*.csv
+
+# deployment folder
+deployment/
+
+
+# Output files
 output.png
+
+# Editor/IDE settings
+.vscode/
+.idea/
+.DS_Store
