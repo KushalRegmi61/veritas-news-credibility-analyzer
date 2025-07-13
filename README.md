@@ -12,7 +12,7 @@ Advanced ML system with risk assessment, pattern analysis, and explainable AI fo
 - [How It Works](#how-it-works)
 - [Technical Stack](#technical-stack)
 - [Use Cases](#use-cases)
-- [Model Performance](#model-performance)
+- [Model Evaluation Result](#evaluation-results)
 - [Exploratory Data Analysis (EDA) Summary](#exploratory-data-analysis-eda-summary)
 - [Important Disclaimer](#important-disclaimer)
 - [Getting Started](#getting-started)
@@ -65,8 +65,7 @@ Veritas is a comprehensive news credibility analysis platform that leverages adv
 
 ### Streamlit Frontend
 
-Access the interactive web application here:  
-[https://veritas-news-analyzer.streamlit.app](https://veritas-news-analyzer.streamlit.app)
+Access the interactive web application here: [https://veritas-news-analyzer.streamlit.app](https://veritas-news-analyzer.streamlit.app)
 
 Paste or upload a news article and receive:
 - Credibility prediction (Real or Fake)
@@ -84,7 +83,7 @@ Paste or upload a news article and receive:
 | POST   | `/analyze` | Full analysis pipeline including risk scoring |
 
 
-
+--- 
 ## How It Works
 
 1. Input Processing: Text is analyzed for basic patterns and defensive checks  
@@ -115,13 +114,20 @@ Paste or upload a news article and receive:
 
 ---
 
-## Model Performance
+### Evaluation Results
 
-The system provides:  
-- Prediction Confidence: Percentage-based confidence scores  
-- Feature Importance: Ranked list of decision factors  
-- Risk Assessment: Categorized risk levels with explanations  
-- Transparency: Full explanation of prediction reasoning
+To assess model performance, we evaluated it on a held-out test set using several classification metrics.
+
+- <strong>Confusion Matrix</strong>: Shows the distribution of true vs. predicted classes
+  
+  <img src="./reports/evaluation_metrics/confusion_matrix.png" width="400">
+
+- <strong>Precision-Recall Curve</strong>: Highlights model performance on imbalanced data
+  
+  <img src="./reports/evaluation_metrics/precision_recall_curve.png" width="400">
+
+
+These plots help assess the model’s capability to distinguish between fake and real news, especially under imbalanced class scenarios. For fair evaluation, we prioritized metrics like **F1-score** and **AUC-PR** over just accuracy.
 
 ---
 
