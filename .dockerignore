@@ -16,6 +16,7 @@ ENV/
 
 # Model and preprocessing artifacts
 best_parameters.pkl
+model_pipeline_98-79.pkl
 
 # Data and reports
 data/
@@ -39,6 +40,9 @@ deployment/
 
 # Output files
 output.png
+
+# streamlit app
+app.py
 
 # Editor/IDE settings
 .vscode/
