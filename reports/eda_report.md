@@ -1,4 +1,4 @@
-#  Misinformation Detector: EDA REPORT
+#  Varitas: EDA REPORT
 
 This EDA explores the linguistic, structural, and temporal patterns that distinguish real from fake news in our dataset. Each section is driven by a guiding question, followed by visual analysis and key insights.
 
@@ -180,8 +180,6 @@ Fake news articles contain **more uppercase words** (mean: 8.4 vs. 6.7; max: 309
 *Which single words (unigrams) are most frequent in each class?*
 
 **Plot:**  
-![Top 20 Unigrams in Real News](/reports/figures/top_20_unigrams_in_real_news.jpg)
----
 ![Top 20 Unigrams in Fake News](/reports/figures/top_20_unigrams_in_fake_news.jpg)
 
 **Insight:**  
