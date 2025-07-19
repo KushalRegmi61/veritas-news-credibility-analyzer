@@ -5,20 +5,16 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from sklearn.base import BaseEstimator, TransformerMixin
 from nltk.tokenize import RegexpTokenizer
-
+import emoji
 
 
 class TextPreprocessor(BaseEstimator, TransformerMixin):
     def __init__(self):
         self.stop_words = stopwords.words('english')
-        self.freqwords = set([
-            'trump', 'president', 'reuters', 'state', 'donald',
-            'states', 'house', 'government', 'republican', 'united'
-        ])
+        self.freqwords = set(['said', 'trump', 'president', 'people', 'state', 'reuters', 'new', 'donald', 'house', 'government'])
         self.stopwords_set = set(self.stop_words).union(self.freqwords)
         self.lemmatizer = WordNetLemmatizer()
         self.tokenizer = RegexpTokenizer(r'[a-zA-Z0-9]+')
-        
 
     def preprocess_text(self, text):
         # Lowercase
@@ -33,23 +29,20 @@ class TextPreprocessor(BaseEstimator, TransformerMixin):
         # Remove HTML tags
         text = re.sub(r'<.*?>', '', text)
 
+
+        # Remove possessives like "trump's" → "trump"
+        text = re.sub(r"'s\b", "", text)
+
         # Remove punctuation
         text = re.sub(f'[{re.escape(string.punctuation)}]', '', text)
+
 
         # Remove newlines and unicode punctuation
         text = re.sub(r'\n', ' ', text)
         text = re.sub(r'[’“”…]', '', text)
 
         # Remove emojis
-        emoji_pattern = re.compile("["
-            u"\U0001F600-\U0001F64F"  # emoticons
-            u"\U0001F300-\U0001F5FF"  # symbols & pictographs
-            u"\U0001F680-\U0001F6FF"  # transport & map symbols
-            u"\U0001F1E0-\U0001F1FF"  # flags
-            u"\U00002702-\U000027B0"
-            u"\U000024C2-\U0001F251"
-            "]+", flags=re.UNICODE)
-        text = emoji_pattern.sub('', text)
+        text = emoji.replace_emoji(text, replace='')
 
         # Expand contractions
         contractions = {
@@ -71,22 +64,18 @@ class TextPreprocessor(BaseEstimator, TransformerMixin):
 
         # Tokenize
         tokens = self.tokenizer.tokenize(text)
-        
 
-        # Remove stopwords
-        tokens = [word for word in tokens if word not in self.stopwords_set]
-
-        # Lemmatize
+        # Lemmatize first
         tokens = [self.lemmatizer.lemmatize(word) for word in tokens]
 
-        # Return processed string
-        return ' '.join(tokens)
+        # Then remove stopwords (after lemmatization to catch more)
+        tokens = [word for word in tokens if word not in self.stopwords_set]
 
+        return ' '.join(tokens)
 
     def fit(self, X, y=None):
         return self
 
     def transform(self, X):
         return [self.preprocess_text(text) for text in X]
-
 
