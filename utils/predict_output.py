@@ -13,7 +13,7 @@ load_dotenv()
 MODEL_VERSION = '1.0.0'
 
 model_pipeline_path = os.getenv('MODEL_PATH')
-model_pipeline = load_model(model_pipeline_path='./model/model_pipeline_98-48.pkl')
+model_pipeline = load_model(model_pipeline_path=model_pipeline_path)
 text_preprocessor = load_preprocessor()
 
 CLASS_LABELS = {
