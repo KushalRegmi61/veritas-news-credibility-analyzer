@@ -43,9 +43,13 @@ def health_check():
 def predict_news(text: UserInput):
     user_input = {
         'text': text.text,
-        'text_length': text.text_length,
-        'exclamations_mark_count': text.exclamations_mark_count,
-        'questions_mark_count': text.questions_mark_count,
+        # 'text_length': text.text_length,
+        'text_length_bin': text.text_length_bin,
+        'has_uppercase_emphasis': text.has_uppercase_emphasis,
+        'long_text_flag': text.long_text_flag,
+        'readability_score': text.readability_score,
+        'punctuation_alert': text.punctuation_alert,
+        'first_sentence_length': text.first_sentence_length, 
         'uppercase_words_count': text.uppercase_words_count
     }
     try: 
@@ -54,3 +58,5 @@ def predict_news(text: UserInput):
     
     except Exception as e: 
         raise HTTPException(status_code=500, detail=str(e))
+
+
