@@ -690,15 +690,23 @@ def render_risk_meter(fake_conf: float, threshold: float = 45.0):
         **Fake News Probability:** `{fake_conf * 100:.1f}%`  
         **Threshold:** `{threshold:.0f}%`  
         """)
-        if fake_conf * 100 >= threshold:
+        # if fake_conf * 100 >= threshold:
+        # Use get_confidence_level to determine description and color
+        description, color = get_confidence_level(fake_conf)
+        if color == "error":
             st.markdown(
-                "<span style='color:crimson; font-weight:600'>This article is likely misleading or false.</span>", 
-                unsafe_allow_html=True
+            f"<span style='color:crimson; font-weight:600'>{description}.</span>", 
+            unsafe_allow_html=True
+            )
+        elif color == "warning":
+            st.markdown(
+            f"<span style='color:orange; font-weight:600'>{description}. </span>", 
+            unsafe_allow_html=True
             )
         else:
             st.markdown(
-                "<span style='color:seagreen; font-weight:600'> This article appears credible.</span>", 
-                unsafe_allow_html=True
+            f"<span style='color:seagreen; font-weight:600'>{description}.</span>", 
+            unsafe_allow_html=True
             )
 
     # Right side: Gauge meter
