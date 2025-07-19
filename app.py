@@ -10,7 +10,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 # Configuration
-API_URL = "http://127.0.0.1:8000/predict"
+API_URL = "https://veritas-news-credibility-analyzer.onrender.com/predict"
 MAX_TEXT_LENGTH = 10000
 MIN_TEXT_LENGTH = 50
 
@@ -799,6 +799,7 @@ def display_enhanced_results(data: Dict, metrics: Dict, risk_indicators: List[Di
     
     st.plotly_chart(fig_prob, use_container_width=True)
     
+    st.markdown('---')
     # Risk assessment
     with st.expander('### Risk Assessment'):
         # Determine risk level and description
@@ -814,7 +815,7 @@ def display_enhanced_results(data: Dict, metrics: Dict, risk_indicators: List[Di
             risk_level = "High Risk"
             risk_color = "error" 
             risk_description = "Multiple indicators suggest this content may contain misleading or fabricated information."
-        
+    
         # Display risk assessment
         if risk_color == "success":
             st.success(f"**{risk_level}** - Misinformation probability: {fake_prob:.1%}")
@@ -827,6 +828,7 @@ def display_enhanced_results(data: Dict, metrics: Dict, risk_indicators: List[Di
         render_risk_meter(fake_prob)
         st.info(risk_description)
     
+    st.markdown('---')
     # Classification methodology
     
     st.markdown("#### Classification Methodology")
