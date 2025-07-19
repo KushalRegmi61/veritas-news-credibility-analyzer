@@ -65,12 +65,12 @@ def get_enhanced_risk_indicators(metrics: Dict) -> List[Dict]:
     # High severity indicators
     if metrics['uppercase_words_count'] > 10:
         indicators.append({
-            'message': f"Excessive use of capital letters ({metrics['uppercase_words_count']} words in ALL CAPS)",
+            'message': f"Excessive use of capital letters ({metrics['uppercase_words_count']} words in caps)",
             'severity': 'high'
         })
     elif metrics['uppercase_words_count'] > 5:
         indicators.append({
-            'message': f"High use of capital letters ({metrics['uppercase_words_count']} words in ALL CAPS)",
+            'message': f"High use of capital letters ({metrics['uppercase_words_count']} words in caps)",
             'severity': 'medium'
         })
     
@@ -112,18 +112,17 @@ def get_enhanced_risk_indicators(metrics: Dict) -> List[Dict]:
     return indicators
 
 def get_confidence_level(confidence: float) -> tuple:
-    """Return confidence level description and color"""
-    if confidence < 0.2:
+    """Return confidence level description and color based on 0.45 threshold"""
+    if confidence < 0.15:
         return "Highly Reliable", "success"
-    elif confidence < 0.4:
-        return "Likely Reliable", "success"
-    elif confidence < 0.6:
-        return "Potentially Misleading", "warning"
-    elif confidence < 0.8:
+    elif confidence < 0.30:
+        return "Likely Reliable", "success" 
+    elif confidence < 0.45:
+        return "Potentially Concerning", "warning"
+    elif confidence < 0.65:
         return "Likely Misinformation", "error"
     else:
         return "High Risk of Misinformation", "error"
-
 
 
 
@@ -284,40 +283,175 @@ def save_analysis_to_history(text: str, result: Dict, metrics: Dict):
     if len(st.session_state.analysis_history) > 10:
         st.session_state.analysis_history = st.session_state.analysis_history[-10:]
 
+
+
 def create_metrics_visualization(metrics: Dict) -> go.Figure:
-    """Create interactive visualization for text metrics"""
-    fig = go.Figure()
-    
-    # Radar chart for text metrics
-    categories = ['Length Score', 'Complexity', 'Emotional Language', 'Question Usage', 'Caps Usage']
-    
-    # Normalize metrics to 0-100 scale
-    values = [
-        min(100, metrics['text_length'] / 20),  # Length score
-        min(100, metrics['readability_score']),  # Complexity
-        min(100, metrics['exclamations_mark_count'] * 10),  # Emotional language
-        min(100, metrics['questions_mark_count'] * 20),  # Question usage
-        min(100, metrics['uppercase_words_count'] * 5)  # Caps usage
+    """
+    Create an interactive radar chart visualization to analyze writing patterns 
+    of the input text.
+
+    Parameters:
+    - metrics: Dict
+        Dictionary containing text-related metrics:
+            - text_length: int
+            - readability_score: float
+            - exclamations_mark_count: int
+            - questions_mark_count: int
+            - uppercase_words_count: int
+
+    Returns:
+    - Plotly radar chart figure showing scaled metric values from 0 to 100.
+    """
+
+    # Define metric labels with intuitive names
+    categories = [
+        'Text Length (normalized)',
+        'Readability (Flesch score)',
+        'Emotional Tone (! marks)',
+        'Interrogative Tone (? marks)',
+        'Emphasis (CAPS usage)'
     ]
-    
+
+    # Normalize each metric to a 0–100 scale for comparison
+    values = [
+        min(100, metrics['text_length'] / 20),                    # Long = higher
+        min(100, metrics['readability_score']),                   # Higher = easier to read
+        min(100, metrics['exclamations_mark_count'] * 10),        # More ! = higher emotional tone
+        min(100, metrics['questions_mark_count'] * 20),           # More ? = more questioning
+        min(100, metrics['uppercase_words_count'] * 5)            # CAPS = more emphasis
+    ]
+
+    fig = go.Figure()
+
     fig.add_trace(go.Scatterpolar(
         r=values,
         theta=categories,
         fill='toself',
-        name='Text Metrics'
+        name='Writing Pattern Score',
+        line=dict(color='indigo'),
+        marker=dict(size=8)
     ))
-    
+
     fig.update_layout(
+        title={
+            'text': "Writing Pattern Analysis",
+            'x': 0.5,
+            'xanchor': 'center',
+            'font': {'size': 20}
+        },
         polar=dict(
+            bgcolor='#f9f9f9',
             radialaxis=dict(
                 visible=True,
-                range=[0, 100]
-            )),
-        showlegend=True,
-        title="Text Pattern Analysis"
+                range=[0, 100],
+                tickfont=dict(size=10),
+                title="Score"
+            ),
+            angularaxis=dict(
+                tickfont=dict(size=11)
+            )
+        ),
+        showlegend=False,
+        margin=dict(l=40, r=40, t=80, b=40),
+        height=400
     )
-    
+
     return fig
+
+
+import streamlit as st
+import plotly.graph_objects as go
+from typing import Dict
+
+def create_metrics_visualization(metrics: Dict) -> go.Figure:
+    """
+    Create an interactive radar chart visualization to analyze writing patterns 
+    of the input text.
+
+    Parameters:
+    - metrics: Dict
+        Dictionary containing text-related metrics:
+            - text_length: int
+            - readability_score: float
+            - exclamations_mark_count: int
+            - questions_mark_count: int
+            - uppercase_words_count: int
+
+    Returns:
+    - Plotly radar chart figure showing scaled metric values from 0 to 100.
+    """
+
+    categories = [
+        'Text Length (normalized)',
+        'Readability (Flesch score)',
+        'Emotional Tone (! marks)',
+        'Interrogative Tone (? marks)',
+        'Emphasis (CAPS usage)'
+    ]
+
+    values = [
+        min(100, metrics['text_length'] / 20),
+        min(100, metrics['readability_score']),
+        min(100, metrics['exclamations_mark_count'] * 10),
+        min(100, metrics['questions_mark_count'] * 20),
+        min(100, metrics['uppercase_words_count'] * 5)
+    ]
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatterpolar(
+        r=values,
+        theta=categories,
+        fill='toself',
+        name='Writing Pattern Score',
+        line=dict(color='indigo'),
+        marker=dict(size=8)
+    ))
+
+    fig.update_layout(
+        title={
+            'text': "Writing Pattern Analysis",
+            'x': 0.5,
+            'xanchor': 'center',
+            'font': {'size': 20}
+        },
+        polar=dict(
+            bgcolor='#f9f9f9',
+            radialaxis=dict(
+                visible=True,
+                range=[0, 100],
+                tickfont=dict(size=10)
+            ),
+            angularaxis=dict(
+                tickfont=dict(size=11)
+            )
+        ),
+        showlegend=False,
+        margin=dict(l=40, r=40, t=100, b=40),
+        height=430
+    )
+
+    return fig
+
+def display_metrics_with_summary(metrics: Dict):
+    """
+    Display the radar chart with a left-side one-line summary.
+    """
+    fig = create_metrics_visualization(metrics)
+
+    left_col, right_col = st.columns([1, 2])
+
+    with left_col:
+        st.markdown("### Summary")
+        st.write(
+        "This radar chart highlights key writing traits length, readability, emotional tone, questioning, "
+        "and emphasis to show how writing style may affect reader trust and content perception."
+    )
+
+
+    with right_col:
+        st.plotly_chart(fig, use_container_width=True)
+
 
 def categorize_shap_features(feature_names: List[str], shap_values: List[float]) -> Dict:
     """Categorize SHAP features into different types for better presentation"""
@@ -360,9 +494,9 @@ def display_enhanced_sidebar():
         with st.expander(" Model Information"):
             st.write("Algorithm: XGBoost Classifier")
             st.write("Features: text and metadata features")
-            st.write("Training Data: 20,000+ verified articles")
-            st.write("Performance: 98.68% F1-Score")
-            st.write("Last Updated: January 2025")
+            st.write("Training Data: 30,000+ verified articles")
+            st.write("Performance: 98.48% F1-Score")
+            st.write("Last Updated: July 2025")
         
         st.markdown('---')
         # Analysis history
@@ -397,8 +531,8 @@ def display_enhanced_sidebar():
         
         # Export option
         if st.session_state.analysis_history:
-            st.markdown("### 📥 Export")
-            if st.button("📁 Export History"):
+            st.markdown("### Export")
+            if st.button("Export History"):
                 export_data = json.dumps(st.session_state.analysis_history, indent=2)
                 st.download_button(
                     label="Download JSON",
@@ -537,58 +671,108 @@ def display_shap_explanation(explanation: Dict):
         else:
             st.info("**Model Reasoning:** The negative features (supporting real news classification) outweigh the positive features in this analysis.")
 
+
+def render_risk_meter(fake_conf: float, threshold: float = 45.0):
+    """
+    Render a compact, professional Risk Meter showing fake news probability.
+
+    Parameters:
+    - fake_conf: float : Model's predicted probability (0 to 1) that input is fake news.
+    - threshold: float : Threshold (%) above which content is flagged as risky.
+    """
+
+    left_col, right_col = st.columns([2, 1])
+
+    # Left side: Explanation
+    with left_col:
+        st.subheader("Assessment Summary")
+        st.markdown(f"""
+        **Fake News Probability:** `{fake_conf * 100:.1f}%`  
+        **Threshold:** `{threshold:.0f}%`  
+        """)
+        if fake_conf * 100 >= threshold:
+            st.markdown(
+                "<span style='color:crimson; font-weight:600'>This article is likely misleading or false.</span>", 
+                unsafe_allow_html=True
+            )
+        else:
+            st.markdown(
+                "<span style='color:seagreen; font-weight:600'> This article appears credible.</span>", 
+                unsafe_allow_html=True
+            )
+
+    # Right side: Gauge meter
+    with right_col:
+        fig = go.Figure(go.Indicator(
+            mode="gauge+number+delta",
+            value=fake_conf * 100,
+            delta={
+                'reference': threshold,
+                'increasing': {'color': "red"},
+                'decreasing': {'color': "green"}
+            },
+            domain={'x': [0, 1], 'y': [0, 1]},
+            title={'text': "Fake Probability", 'font': {'size': 14}},
+            gauge={
+                'axis': {'range': [0, 100], 'tickwidth': 1, 'tickcolor': "gray"},
+                'bar': {'color': "crimson" if fake_conf * 100 >= threshold else "seagreen"},
+                'steps': [
+                    {'range': [0, 20], 'color': '#d4edda'},
+                    {'range': [20, 35], 'color': '#ffeeba'},
+                    {'range': [35, threshold], 'color': '#fff3cd'},
+                    {'range': [threshold, 65], 'color': '#f8d7da'},
+                    {'range': [65, 100], 'color': '#f5c6cb'}
+                ],
+                'threshold': {
+                    'line': {'color': "black", 'width': 3},
+                    'thickness': 0.75,
+                    'value': threshold
+                }
+            }
+        ))
+
+        fig.update_layout(margin=dict(t=10, b=10, l=10, r=10), height=240)
+        st.plotly_chart(fig, use_container_width=True)
+
+
 def display_enhanced_results(data: Dict, metrics: Dict, risk_indicators: List[Dict]):
-    """Display enhanced analysis results"""
+    """Display enhanced analysis results with professional formatting"""
     # Extract prediction data
     predicted_category = data.get('predicted_category', 'Unknown')
     confidence = data.get('confidence', 0)
-    fake_confidence = data['class_probabilities'].get('Fake News', 0)
-    real_confidence = data['class_probabilities'].get('Real News', 0)
+    fake_prob = data['class_probabilities'].get('Fake News', 0)
+    real_prob = data['class_probabilities'].get('Real News', 0)
     explanation = data.get('explanation', {})
     
-    # Main result with enhanced styling
     st.markdown("---")
     st.markdown("## Analysis Results")
     
-    # PROMINENT PREDICTION DISPLAY AT TOP
-    st.markdown("### Prediction Result")
-    
-    # Create a large, prominent display for the main prediction
+    # Primary prediction display
+    st.markdown("### Classification Result")
     if predicted_category == "Fake News":
-        st.error(f"## **{predicted_category.upper()}**")
-        st.error(f"**Confidence: {confidence:.1%}**")
-        prediction_emoji = "Alert"
-        prediction_color = "error"
+        st.error(f"**{predicted_category.upper()}** (Confidence: {confidence:.1%})")
     else:
-        st.success(f"## **{predicted_category.upper()}**")
-        st.success(f"**Confidence: {confidence:.1%}**")
-        prediction_emoji = "Verified"
-        prediction_color = "success"
+        st.success(f"**{predicted_category.upper()}** (Confidence: {confidence:.1%})")
     
-    # Enhanced Class Probabilities Bar Chart
-    st.markdown("### Class Probabilities")
-    
-    # Create DataFrame for probabilities
+    # Classification probabilities chart
+    st.markdown("### Model Confidence")
     prob_data = {
         'Category': list(data['class_probabilities'].keys()),
-        'Probability': list(data['class_probabilities'].values()),
-        'Percentage': [p * 100 for p in data['class_probabilities'].values()]
+        'Probability': [p * 100 for p in data['class_probabilities'].values()]
     }
     prob_df = pd.DataFrame(prob_data)
     
-    # Create horizontal bar chart
     fig_prob = px.bar(
         prob_df, 
-        x='Percentage', 
+        x='Probability', 
         y='Category',
-        title='Model Confidence by Category',
-        color='Percentage',
-        color_continuous_scale=['#ff4444', '#44ff44'],  # Red to Green
-        text='Percentage',
+        title='Classification Confidence by Category',
+        color='Probability',
+        color_continuous_scale=['#dc3545', '#28a745'],
+        text='Probability',
         orientation='h'
     )
     
-    # Customize the chart
     fig_prob.update_traces(
         texttemplate='%{text:.1f}%',
         textposition='inside',
@@ -597,131 +781,138 @@ def display_enhanced_results(data: Dict, metrics: Dict, risk_indicators: List[Di
     )
     
     fig_prob.update_layout(
-        height=300,
+        height=250,
         showlegend=False,
-        xaxis_title="Confidence Percentage",
-        yaxis_title="Category",
-        font=dict(size=12)
+        xaxis_title="Confidence (%)",
+        yaxis_title="",
+        font=dict(size=12),
+        margin=dict(l=20, r=20, t=40, b=20)
     )
     
     st.plotly_chart(fig_prob, use_container_width=True)
     
-    # Additional metrics in columns
-    col1, col2, col3 = st.columns(3)
+    # Risk assessment
+    with st.expander('### Risk Assessment'):
+        # Determine risk level and description
+        if fake_prob < 0.3:
+            risk_level = "Low Risk"
+            risk_color = "success"
+            risk_description = "Content aligns with standard journalistic patterns and shows minimal indicators of misinformation."
+        elif fake_prob < 0.6:
+            risk_level = "Medium Risk" 
+            risk_color = "warning"
+            risk_description = "Analysis identified patterns that warrant additional verification before sharing or acting on this information."
+        else:
+            risk_level = "High Risk"
+            risk_color = "error" 
+            risk_description = "Multiple indicators suggest this content may contain misleading or fabricated information."
+        
+        # Display risk assessment
+        if risk_color == "success":
+            st.success(f"**{risk_level}** - Misinformation probability: {fake_prob:.1%}")
+        elif risk_color == "warning":
+            st.warning(f"**{risk_level}** - Misinformation probability: {fake_prob:.1%}")
+        else:
+            st.error(f"**{risk_level}** - Misinformation probability: {fake_prob:.1%}")
+        
+        # risk meter
+        render_risk_meter(fake_prob)
+        st.info(risk_description)
     
-    with col1:
-        st.metric("Fake News Probability", f"{fake_confidence:.1%}")
+    # Classification methodology
     
-    with col2:
-        st.metric("Real News Probability", f"{real_confidence:.1%}")
+    st.markdown("#### Classification Methodology")
+    st.info(f"""
+    **Threshold-based Classification**: Content with ≥45% misinformation probability is classified as fake news.
     
-    with col3:
-        reliability_score = real_confidence * 100
-        st.metric("Reliability Score", f"{reliability_score:.0f}/100")
+    **Current Analysis**: {fake_prob:.1%} misinformation probability ({'above' if fake_prob >= 0.45 else 'below'} classification threshold)
     
-    # Risk Assessment section
-    st.markdown("### Risk Assessment")
-    fake_prob = data['class_probabilities'].get('Fake News', 0)
-    
-    if fake_prob < 0.3:
-        st.success(f"**Low Risk** - This appears to be legitimate news (Risk: {fake_prob:.1%})")
-    elif fake_prob < 0.6:
-        st.warning(f"**Medium Risk** - Some concerning patterns detected (Risk: {fake_prob:.1%})")
-    else:
-        st.error(f"**High Risk** - Strong indicators of misinformation (Risk: {fake_prob:.1%})")
-    
-    st.progress(fake_prob)
-    
-    # Trust disclaimer
-    st.info("""
-    **Remember:** This tool provides guidance based on writing patterns, not absolute truth. 
-    Always verify information through multiple reliable sources before making decisions.
+    **Important**: This analysis is based on linguistic patterns and writing style indicators, not content verification. Always cross-reference with authoritative sources.
     """)
     
-    # Enhanced metrics display
+    # Detailed metrics
     st.markdown("---")
-    st.markdown("## Detailed Analysis")
+    st.markdown("## Content Analysis Metrics")
     
-    # Metrics grid
-    col1, col2, col3, col4, col5 = st.columns(5)
-    
+    # Primary metrics
+    col1, col2, col3, col4 = st.columns(4)
     with col1:
-        st.metric("Words", metrics['word_count'])
+        st.metric("Word Count", f"{metrics['word_count']:,}")
     with col2:
         st.metric("Sentences", metrics['sentence_count'])
     with col3:
-        st.metric("ALL CAPS", metrics['uppercase_words_count'])
+        st.metric("Average Sentence Length", f"{metrics['avg_sentence_length']:.1f}")
     with col4:
-        st.metric("Exclamations", metrics['exclamations_mark_count'])
-    with col5:
-        st.metric("Questions", metrics['questions_mark_count'])
+        st.metric("Readability Score", f"{metrics['readability_score']:.1f}")
     
-    # Additional metrics
+    # Style indicators
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        st.metric("Avg Sentence Length", f"{metrics['avg_sentence_length']:.1f}")
+        st.metric("Uppercase Words", metrics['uppercase_words_count'])
     with col2:
-        st.metric("Numbers", metrics['numbers_count'])
+        st.metric("Exclamation Marks", metrics['exclamations_mark_count'])
     with col3:
-        st.metric("URLs", metrics['urls_count'])
+        st.metric("Question Marks", metrics['questions_mark_count'])
     with col4:
-        st.metric("Readability", f"{metrics['readability_score']:.1f}")
+        st.metric("External URLs", metrics['urls_count'])
     
-    # Risk indicators with severity
+    # Risk indicators analysis
     if risk_indicators:
-        st.markdown("#### Identified Risk Indicators")
+        st.markdown("#### Content Pattern Analysis")
         
-        high_risk = [r for r in risk_indicators if r['severity'] == 'high']
-        medium_risk = [r for r in risk_indicators if r['severity'] == 'medium']
-        low_risk = [r for r in risk_indicators if r['severity'] == 'low']
+        # Categorize indicators by severity
+        high_indicators = [r for r in risk_indicators if r['severity'] == 'high']
+        medium_indicators = [r for r in risk_indicators if r['severity'] == 'medium'] 
+        low_indicators = [r for r in risk_indicators if r['severity'] == 'low']
         
-        if high_risk:
-            st.error("**High Risk Indicators:**")
-            for indicator in high_risk:
+        if high_indicators:
+            st.error("**High Priority Concerns**")
+            for indicator in high_indicators:
                 st.write(f"• {indicator['message']}")
         
-        if medium_risk:
-            st.warning("**Medium Risk Indicators:**")
-            for indicator in medium_risk:
+        if medium_indicators:
+            st.warning("**Moderate Concerns**")  
+            for indicator in medium_indicators:
                 st.write(f"• {indicator['message']}")
         
-        if low_risk:
-            st.info("**Low Risk Indicators:**")
-            for indicator in low_risk:
+        if low_indicators:
+            st.info("**Minor Observations**")
+            for indicator in low_indicators:
                 st.write(f"• {indicator['message']}")
     else:
-        st.success("#### No Major Risk Indicators Found")
-        st.write("The writing style appears to follow standard journalistic patterns.")
+        st.success("#### Pattern Analysis: No Significant Concerns")
+        st.write("The content follows standard journalistic writing conventions.")
     
-    # Interactive visualization
+    # Visualization
     st.markdown("---")
-    st.markdown("#### Text Pattern Visualization")
-    fig = create_metrics_visualization(metrics)
-    st.plotly_chart(fig, use_container_width=True)
+    with st.expander('Metric Visualization'):
     
-    # Display SHAP explanation
+        display_metrics_with_summary(metrics)
+        # st.plotly_chart(fig, use_container_width=True)
+    
+    # SHAP explanation if available
     if explanation:
         display_shap_explanation(explanation)
     
-      
-    # Technical details - Always shown
-    with st.expander("Show Technical Details"):
-        
+    # Technical details (collapsed by default)
+    st.markdown('---')
+    with st.expander("Technical Analysis Details"):
         col1, col2 = st.columns(2)
         
         with col1:
-            st.markdown("**Model Output:**")
+            st.markdown("**Model Outputs**")
             st.json({
-                "predicted_category": data.get('predicted_category', 'Unknown'),
-                "confidence": data.get('confidence', 0),
-                "class_probabilities": data.get('class_probabilities', {}),
-                "prediction_threshold": data.get('prediction_threshold')
+                "classification": predicted_category,
+                "confidence": round(confidence, 4),
+                "fake_probability": round(fake_prob, 4),
+                "real_probability": round(real_prob, 4),
+                "threshold": 0.45
             })
         
         with col2:
-            st.markdown("**Text Analysis Metrics:**")
-            st.json(metrics)
-
+            st.markdown("**Content Metrics**")
+            technical_metrics = {k: v for k, v in metrics.items() if k != 'text_length'}
+            st.json(technical_metrics)
 # Main Application
 def main():
     display_enhanced_sidebar()
@@ -729,6 +920,11 @@ def main():
     # st.markdown("""
     # *Advanced ML system that predicts whether news articles are fake or real with explainable AI insights*
     # """)
+    st.info("""
+    **Project Showcase**: This machine learning application demonstrates advanced NLP techniques for news classification with reliable performance. 
+    While the model delivers consistent results, cross-referencing with multiple sources is recommended for critical decisions.
+    """)
+      
     st.info("**How it works:** Input news text → ML prediction → SHAP analysis → Risk assessment → Visual explanations")
 
     # Input methods
@@ -737,6 +933,8 @@ def main():
         ["Text Input", "File Upload (Coming Soon)"],
         horizontal=True
     )
+    # Short info about the app
+  
     
     if input_method == "Text Input":
         text_input = st.text_area(
