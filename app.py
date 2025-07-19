@@ -921,7 +921,7 @@ def main():
     # *Advanced ML system that predicts whether news articles are fake or real with explainable AI insights*
     # """)
     st.info("""
-    **Project Showcase**: This machine learning application demonstrates advanced NLP techniques for news classification with reliable performance. 
+    **Development Notice**: This tool is an independent research project developed to demonstrate advanced NLP techniques for content analysis. 
     While the model delivers consistent results, cross-referencing with multiple sources is recommended for critical decisions.
     """)
       
