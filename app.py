@@ -8,10 +8,15 @@ from datetime import datetime
 from typing import Dict, List, Optional
 import plotly.express as px
 import plotly.graph_objects as go
+from dotenv import load_dotenv
+import os
 
+
+
+load_dotenv()
 # Configuration
-API_URL = "http://127.0.0.1:8000/predict"
-MAX_TEXT_LENGTH = 10000
+API_URL = os.getenv('API_URL', "http://127.0.0.1:8000/predict")
+MAX_TEXT_LENGTH = 20000
 MIN_TEXT_LENGTH = 50
 
 st.set_page_config(
