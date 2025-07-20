@@ -96,11 +96,12 @@ Paste or upload a news article and receive:
 
 ## Technical Stack
 
-- Frontend: Streamlit for interactive web interface  
+- Frontend: Streamlit for interactive web interface
+- Backend: FastAPI for API and documentation
 - ML Framework: Scikit-learn for model training and prediction  
 - Explainability: SHAP for transparent AI decision explanations  
-- Visualization: Matplotlib, Plotly for interactive charts  
-- Text Processing: NLTK, spaCy for linguistic analysis
+- Visualization: Matplotlib,Seaborn,  Plotly for interactive charts  
+- Text Processing: NLTK for linguistic analysis
 
 ---
 
@@ -194,7 +195,7 @@ docker run -p 8000:8000 kushalregmi61/veritas-news-analyzer:latest
 
 This will start the FastAPI app inside a container accessible at `http://localhost:8000`.
 
----
+
 
 
 ---
@@ -236,6 +237,7 @@ misinfo-detector/
 │   └── preprocessing.py           # Text preprocessing utilities
 ```
 
+--- 
 
 ## Contributing
 
@@ -252,8 +254,6 @@ Contributions are welcome! Please refer to the contributing guidelines for:
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
----
 
-Built with transparency and rigor to help combat misinformation.
 
 
