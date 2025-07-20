@@ -72,6 +72,12 @@ Paste or upload a news article and receive:
 - Risk level and confidence score
 - SHAP-based explanation and key features
 
+<h2> Demo</h2>
+<p align="center">
+  <img src="reports/gifs/streamlit_demo.gif" alt="App Demo" />
+</p>
+
+
 ### FastAPI Backend 
 
 **Access the API** at: [https://veritas-news-analyzer.streamlit.app](https://veritas-news-credibility-analyzer-awwnywmu5ezhqivgppqmhp.streamlit.app/)
@@ -81,6 +87,11 @@ Paste or upload a news article and receive:
 | POST   | `/predict` | Returns prediction, confidence, SHAP values |
 | GET    | `/health`  | Check if the API service is running         |
 
+
+<h2> Demo</h2>
+<p align="center">
+  <img src="reports/gifs/fast_api_demo.gif" alt="App Demo" />
+</p>
 
 --- 
 ## How It Works
