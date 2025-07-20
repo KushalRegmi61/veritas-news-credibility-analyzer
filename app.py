@@ -10,7 +10,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 # Configuration
-API_URL = "https://veritas-news-credibility-analyzer.onrender.com/predict"
+API_URL = "http://127.0.0.1:8000/predict"
 MAX_TEXT_LENGTH = 10000
 MIN_TEXT_LENGTH = 50
 
@@ -672,7 +672,7 @@ def display_shap_explanation(explanation: Dict):
             st.info("**Model Reasoning:** The negative features (supporting real news classification) outweigh the positive features in this analysis.")
 
 
-def render_risk_meter(fake_conf: float, threshold: float = 45.0):
+def render_risk_meter(fake_conf: float, text_description: str | None, threshold: float = 45.0):
     """
     Render a compact, professional Risk Meter showing fake news probability.
 
@@ -695,17 +695,17 @@ def render_risk_meter(fake_conf: float, threshold: float = 45.0):
         description, color = get_confidence_level(fake_conf)
         if color == "error":
             st.markdown(
-            f"<span style='color:crimson; font-weight:600'>{description}.</span>", 
+            f"<span style='color:crimson; font-weight:600'>{text_description}.</span>", 
             unsafe_allow_html=True
             )
         elif color == "warning":
             st.markdown(
-            f"<span style='color:orange; font-weight:600'>{description}. </span>", 
+            f"<span style='color:orange; font-weight:600'>{text_description}. </span>", 
             unsafe_allow_html=True
             )
         else:
             st.markdown(
-            f"<span style='color:seagreen; font-weight:600'>{description}.</span>", 
+            f"<span style='color:seagreen; font-weight:600'>{text_description}.</span>", 
             unsafe_allow_html=True
             )
 
@@ -825,8 +825,8 @@ def display_enhanced_results(data: Dict, metrics: Dict, risk_indicators: List[Di
             st.error(f"**{risk_level}** - Misinformation probability: {fake_prob:.1%}")
         
         # risk meter
-        render_risk_meter(fake_prob)
-        st.info(risk_description)
+        render_risk_meter(fake_prob, risk_description)
+        # st.info(risk_description)
     
     st.markdown('---')
     # Classification methodology
@@ -1009,7 +1009,7 @@ def main():
                 # Make API request
                 payload = {"text": text_input}
                 
-                with st.spinner("Analyzing content patterns..."):
+                with st.spinner("Analyzing content patterns. Hold tight, this may take 1-2 minutes (go grab a coffee ☕)!"):
                     response_data = make_api_request(payload)
                 
                 if response_data:
