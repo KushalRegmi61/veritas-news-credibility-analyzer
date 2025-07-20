@@ -65,7 +65,7 @@ Veritas is a comprehensive news credibility analysis platform that leverages adv
 
 ### Streamlit Frontend
 
-Access the interactive web application here: [https://veritas-news-analyzer.streamlit.app](https://veritas-news-analyzer.streamlit.app)
+Access the interactive web application here: [https://veritas-news-analyzer.streamlit.app](https://kushalregmi61-misinfo-detector-app-lu3nfq.streamlit.app/)
 
 Paste or upload a news article and receive:
 - Credibility prediction (Real or Fake)
@@ -74,13 +74,12 @@ Paste or upload a news article and receive:
 
 ### FastAPI Backend 
 
-**Access the API** at: [https://veritas-news-analyzer.streamlit.app](https://veritas-news-analyzer.streamlit.app)
+**Access the API** at: [https://veritas-news-analyzer.streamlit.app](https://veritas-news-credibility-analyzer.onrender.com/doc)
 
 | Method | Endpoint   | Description                                 |
 |--------|------------|---------------------------------------------|
 | POST   | `/predict` | Returns prediction, confidence, SHAP values |
 | GET    | `/health`  | Check if the API service is running         |
-| POST   | `/analyze` | Full analysis pipeline including risk scoring |
 
 
 --- 
