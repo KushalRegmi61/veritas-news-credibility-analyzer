@@ -1,6 +1,10 @@
 # Veritas: News Credibility Analyzer
 
-Advanced ML system with risk assessment, pattern analysis, and explainable AI for news verification using Text and Metadata. 
+Can we trust what we read online? <br>
+Can AI help spot fake news and explain why?
+
+These questions inspired the creation of Veritas, a full-stack ML-powered platform with risk assessment, pattern analysis, and explainable AI for news verification using Text and Metadata. 
+
 
 ---
 
@@ -24,7 +28,8 @@ Advanced ML system with risk assessment, pattern analysis, and explainable AI fo
 
 ## Overview
 
-Veritas is a comprehensive news credibility analysis platform that leverages advanced machine learning techniques to detect fake news and provide transparent explanations for its predictions. The system combines content analysis, pattern recognition, and explainable AI to help users make informed decisions about news authenticity.
+Veritas isn’t just a classifier it’s a decision support tool, helps users think critically, not just react, by showing why a news item is flagged. It reveals how language can persuade, mislead, or inform.
+
 
 ---
 
