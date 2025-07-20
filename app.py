@@ -156,9 +156,11 @@ def is_lorem_ipsum(text: str) -> bool:
     
     # Count Lorem Ipsum words
     lorem_count = sum(1 for word in words if word in lorem_words)
+    word_count = sum(1 for word in words if word not in lorem_words)
+    
     
     # If more than 20% of words are Lorem Ipsum words, it's likely Lorem Ipsum
-    return (lorem_count / len(words)) > 0.2
+    return (lorem_count / word_count) > 0.2
 
 def validate_input(text: str) -> tuple:
     """Enhanced input validation - returns (is_valid, error_message, error_type)"""
