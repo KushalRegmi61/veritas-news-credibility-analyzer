@@ -85,7 +85,7 @@ Paste or upload a news article and receive:
 
 ### FastAPI Backend 
 
-**Access the API** at: [https://veritas-news-credibility-analyzer.onrender.com](https://veritas-news-credibility-analyzer.onrender.com)
+**Access the API** at: [https://veritas-news-credibility-analyzer.onrender.com](https://veritas-news-credibility-analyzer.onrender.com/docs)
 
 | Method | Endpoint   | Description                                 |
 |--------|------------|---------------------------------------------|
