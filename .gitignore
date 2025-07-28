@@ -1,8 +1,10 @@
 __pycache__/
 *.pyc
-*.pkl
+
 .env
 *.ipynb_checkpoints/
-model/*.pkl
 __init__.py
 nltk_data/
+.venv/
+.devcontainer/
+.idea/
