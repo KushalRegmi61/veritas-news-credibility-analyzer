@@ -13,6 +13,7 @@ import os
 
 
 
+
 load_dotenv()
 # Configuration
 API_URL = os.getenv('API_URL', "http://127.0.0.1:8000/predict")
@@ -366,9 +367,6 @@ def create_metrics_visualization(metrics: Dict) -> go.Figure:
     return fig
 
 
-import streamlit as st
-import plotly.graph_objects as go
-from typing import Dict
 
 def create_metrics_visualization(metrics: Dict) -> go.Figure:
     """
@@ -502,10 +500,39 @@ def display_enhanced_sidebar():
             st.write("Algorithm: XGBoost Classifier")
             st.write("Features: text and metadata features")
             st.write("Training Data: 30,000+ verified articles")
-            st.write("Performance: 98.48% F1-Score")
+            st.write("Performance: 98.5% F1-Score")
             st.write("Last Updated: July 2025")
         
+        with st.expander("API ACCESS"):
+            
+            st.markdown(
+                """
+                <div style="text-align: center; margin-bottom: 10px">
+                <span>Access the live API below:</span>
+                    <a href="https://veritas-news-credibility-analyzer.onrender.com/docs" target="_blank" style="text-align: center;" >
+                        API Docs
+                    </a>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+        
+        # # Add a white-outline button linking to the GitHub repo
+        # github_repo_url = "https://github.com/kushalregmi61/veritas-news-credibility-analyzer"
+        # # Direct GitHub button (opens repo directly)
+        # st.markdown(
+        #     f"""
+        #     <a href="{github_repo_url}" target="_blank" style="text-decoration: none;">
+        #     <button style="width:100%;padding:0.5em 0.8em;background:#fff;border:2px solid #24292e;color:#24292e;font-weight:600;border-radius:6px;cursor:pointer;font-family: inherit;font-size: 1rem;">
+        #     View Codebase 
+        #     </button>
+        #     </a>
+        #     """,
+        #     unsafe_allow_html=True
+        # )
         st.markdown('---')
+        
+        
         # Analysis history
         st.markdown("###  Analysis History")
         if st.session_state.analysis_history:
@@ -934,9 +961,8 @@ def display_enhanced_results(data: Dict, metrics: Dict, risk_indicators: List[Di
 def main():
     display_enhanced_sidebar()
     st.title("Veritas: News Credibility Analyzer")
-    # st.markdown("""
-    # *Advanced ML system that predicts whether news articles are fake or real with explainable AI insights*
-    # """)
+
+    
     st.info("""
     **Development Notice**: This tool is an independent research project developed to demonstrate advanced NLP techniques for content analysis. 
     While the model delivers consistent results, cross-referencing with multiple sources is recommended for critical decisions.
@@ -1065,6 +1091,10 @@ def main():
     # Footer
     st.markdown("---")
     st.markdown("""
+    <div style='text-align: center; color: gray; font-size: 0.85em;'>
+        © 2025 Veritas AI 
+    </div>
+
     <div style='text-align: center; color: #666; font-size: 0.8em;'>
         <p>This tool is designed to promote media literacy and critical thinking.<br>
         Always verify important information through multiple reliable sources.</p>
