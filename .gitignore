@@ -8,3 +8,8 @@ nltk_data/
 .venv/
 .devcontainer/
 .idea/
+
+# private notebooks
+*.ipynb 
+notebooks/
+.devcontainer/
