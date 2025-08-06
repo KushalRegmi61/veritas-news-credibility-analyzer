@@ -163,7 +163,7 @@ A comprehensive EDA was conducted on the misinformation dataset to uncover patte
 
 These insights informed feature engineering and helped improve model interpretability and fairness.
 
-For the full detailed report, see: [EDA_Report.md](./EDA_Report.md)
+For the full detailed report, see: [EDA_Report.md](reports/eda_report.md)
 
 ---
 
