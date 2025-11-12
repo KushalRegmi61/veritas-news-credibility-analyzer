@@ -234,17 +234,39 @@ git clone https://github.com/kushalregmi61/veritas-news-analyzer.git
 cd veritas-news-analyzer
 ```
 
-2. Install dependencies:
+2. Setup Virtual Environment:
+
+```bash
+# Create a virtual environment (using venv)
+
+# mac/linux
+python3 -m venv .venv
+source .venv/bin/activate
+
+# windows
+python -m venv .venv
+.venv\Scripts\activate
+```
+
+
+
+3. Install dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-3. set up environment variables:
+4. set up environment variables:
 
 ```bash
+
 # Copy the .env_example to .env file
+
+# mac/linux
 cp .env_example .env
+
+# windows
+copy .env_example .env
 
 # Then, edit the .env file to set the API_URL if needed
 
@@ -252,7 +274,7 @@ cp .env_example .env
 API_URL=http://127.0.0.1:8000/predict 
 ```
 
-4. Run the application locally:
+5. Run the application locally:
 
 ```bash
 # 4.1 Start the FastAPI backend (in a separate terminal)
