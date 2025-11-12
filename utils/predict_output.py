@@ -12,7 +12,7 @@ load_dotenv()
 # Model Version 
 MODEL_VERSION = '1.0.0'
 
-model_pipeline_path = os.getenv('MODEL_PATH')
+model_pipeline_path = os.getenv('MODEL_PATH', './model/model_pipeline.pkl')
 model_pipeline = load_model(model_pipeline_path=model_pipeline_path)
 text_preprocessor = load_preprocessor()
 
