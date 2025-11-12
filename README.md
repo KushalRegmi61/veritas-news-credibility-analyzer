@@ -19,9 +19,12 @@ These questions inspired the creation of Veritas, a full-stack ML-powered platfo
 - [Model Evaluation Result](#evaluation-results)
 - [Exploratory Data Analysis (EDA) Summary](#exploratory-data-analysis-eda-summary)
 - [Important Disclaimer](#important-disclaimer)
+- [Repo Structure](#repo-structure)
 - [Getting Started](#getting-started)
 - [Docker Deployment](#docker-deployment)
-- [Repo Structure](#repo-structure)
+  - [Option A: Pull and run (quick start)](#option-a-pull-and-run-quick-start)
+  - [Option B: Build and run locally](#option-bbuild-and-run-locally)
+  - [Accessing the services](#accessing-the-services)
 - [Contributing](#contributing)
 - [License](#license)
 ---
@@ -177,44 +180,6 @@ Veritas is designed as a supplementary tool for news analysis. It provides guida
 - Understand that no AI system is infallible
 
 ---
-
-## Getting Started
-
-1. Clone the repository:
-```bash
-git clone https://github.com/your-username/veritas-news-analyzer.git
-cd veritas-news-analyzer
-````
-
-2. Install dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
-3. Run the application locally:
-
-```bash
-streamlit run app.py
-```
-
----
-
-## Docker Deployment
-
-The application is also containerized for easy deployment. You can pull the Docker image from Docker Hub:
-
-```bash
-docker pull kushalregmi61/veritas-news-analyzer:latest
-docker run -p 8000:8000 kushalregmi61/veritas-news-analyzer:latest
-```
-
-This will start the FastAPI app inside a container accessible at `http://localhost:8000`.
-
-
-
-
----
 ## Repo Structure
 ```
 misinfo-detector/
@@ -222,6 +187,7 @@ misinfo-detector/
 ├── app.py                         # Main streamlit application
 ├── Dockerfile                     # Docker configuration
 ├── .dockerignore                  # Docker ignore files
+├── .env_example                   # Example environment variables
 ├── LICENSE                        # MIT License
 ├── output.png                     # Output visualization
 ├── README.md                      # Project documentation
@@ -253,7 +219,90 @@ misinfo-detector/
 │   └── preprocessing.py           # Text preprocessing utilities
 ```
 
---- 
+---
+
+## Getting Started
+To run the Veritas News Credibility Analyzer locally, follow these steps:
+
+
+1. Clone the repository:
+```bash
+# Clone the repository
+git clone https://github.com/kushalregmi61/veritas-news-analyzer.git
+
+# Navigate into the project directory
+cd veritas-news-analyzer
+```
+
+2. Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+3. set up environment variables:
+
+```bash
+# Copy the .env_example to .env file
+cp .env_example .env
+
+# Then, edit the .env file to set the API_URL if needed
+
+# Example URL for local FastAPI Model Inference Service   
+API_URL=http://127.0.0.1:8000/predict 
+```
+
+4. Run the application locally:
+
+```bash
+# 4.1 Start the FastAPI backend (in a separate terminal)
+uvicorn api.main:app --host 127.0.0.1 --port 8000
+
+```
+
+```bash
+# 4.2 Run the Streamlit app (in another terminal)
+streamlit run app.py
+```
+
+
+---
+## Docker Deployment
+The app is containerized for reproducible deployment. Run the FastAPI backend in Docker by either pulling the published image or building locally.
+
+
+### Option A: Pull and run (quick start)
+1. Pull the published image:
+```bash
+docker pull kushalregmi61/veritas-news-analyzer:latest
+```
+2. Run the container (maps container port 8000 to host port 8000):
+```bash
+docker run -p 8000:8000 kushalregmi61/veritas-news-analyzer:latest
+```
+
+### Option B:Build and run locally
+1. Build the image from the project root:
+```bash
+docker build -t veritas-news-analyzer .
+```
+2. Run the container:
+```bash
+docker run -p 8000:8000 veritas-news-analyzer
+```
+
+
+### Accessing the services
+- FastAPI API docs: http://localhost:8000/docs  
+- If you run the Streamlit frontend locally (in another terminal), start it with:
+```bash
+streamlit run app.py
+```
+- Ensure the Streamlit app’s API_URL (in .env or config) points to the running backend, e.g.:
+```
+API_URL=http://localhost:8000/predict
+```
+---
 
 ## Contributing
 
